@@ -7,6 +7,6 @@ const createDBConnection = async () => {
     useCreateIndex: true,
     useUnifiedTopology: true,
   });
-  console.log(`Mongodb Connected to ${connect.connection.host}`);
+  console.log(`Mongodb Connected to ==>  ${connect.connection.host}`);
 };
 module.exports = createDBConnection;
