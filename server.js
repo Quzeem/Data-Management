@@ -1,11 +1,13 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const auth = require("./routers/auth-route");
+const auth = require("./routes/auth");
 const createDBConnection = require("./config/db-config");
 
 dotenv.config({ path: "./config/.env" });
 
 const app = express();
+
+app.use(express.json())
 
 app.use("/", auth);
 
