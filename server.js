@@ -1,7 +1,10 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const auth = require("./routes/auth");
+
+
 const createDBConnection = require("./config/db-config");
+const auth = require("./routes/auth");
+const guard = require("./routes/guard");
 
 dotenv.config({ path: "./config/.env" });
 
@@ -10,6 +13,7 @@ const app = express();
 app.use(express.json())
 
 app.use("/", auth);
+app.use("/auth", guard);
 
 // connect to Database
 createDBConnection();

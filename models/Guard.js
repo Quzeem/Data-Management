@@ -71,8 +71,8 @@ const GaurdSchema = new Schema(
           type: String,
           trim: true,
         },
-        phone_number: {
-          type: Number,
+        phone_contact: {
+          type: String,
           required: [true, `Guarantor's phone number cannot be empty.`],
           trim: true,
         },
@@ -85,6 +85,7 @@ const GaurdSchema = new Schema(
           default:
             'https://res.cloudinary.com/zeemag/image/upload/v1601946625/konnet/no-avatar_a5icj4.png',
         },
+        _id : false
       },
     ],
   },
