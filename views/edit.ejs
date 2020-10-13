@@ -1,0 +1,129 @@
+<%- include ('./partials/header') %>
+
+<div id="registration-form">
+  <h2 class="text-center mb-4">Edit <%= guard.guard_name %> Data</h2>
+  <form action="/guards/<%= guard._id %>?_method=PUT" method="POST">
+    <fieldset>
+      <legend class="mb-3 text-center">Guard Details</legend>
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="guardName">Guard Name</label>
+          <input type="text" name="guardName" class="form-control" id="guardName" value="<%= guard.guard_name %>">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="guardPhoneNumber">Phone Number</label>
+          <input type="tel" name="guardPhoneNumber" class="form-control" id="guardPhoneNumber" value="<%= guard.phone_number %>">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="guardPermanentHomeAddress">Permanent Home Address</label>
+        <input type="text" name="guardPermanentHomeAddress" class="form-control" id="guardPermanentHomeAddress" placeholder="Enter permanent home address" value="<%= guard.permanent_home_address %>">
+      </div>
+      <div class="form-group">
+        <label for="guardPresentHomeAddress">Present Home Address</label>
+        <input type="text" name="guardPresentHomeAddress" class="form-control" id="guardPresentHomeAddress" placeholder="Enter present home address" value="<%= guard.present_home_address %>">
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="dateOfBirth">Date of Birth</label>
+          <input type="date" name="dateOfBirth" class="form-control" id="dateOfBirth" value="<%= guard.date_of_birth %>">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="stateOfOrigin">State of Origin</label>
+          <input type="text" name="stateOfOrigin" class="form-control" id="stateOfOrigin" value="<%= guard.state_of_origin %>">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="nextOfKin">Next of Kin</label>
+          <input type="text" name="nextOfKin" class="form-control" id="nextOfKin" value="<%= guard.next_of_kin %>">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="nextOfKinPhone">Phone Number of Next of Kin</label>
+          <input type="tel" name="nextOfKinPhone" class="form-control" id="nextOfKinPhone" value="<%= guard.next_of_kin_phone_number %>">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label for="post">Post</label>
+          <input type="text" name="post" class="form-control" id="post" value="<%= guard.post %>">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="beat">Beat</label>
+          <input type="text" name="beat" class="form-control" id="beat" value="<%= guard.beat %>">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="dateOfDeployment">Date of Deployment</label>
+          <input type="date" name="dateOfDeployment" class="form-control" id="dateOfDeployment" value="<%= guard.date_of_deployment %>">
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <fieldset>
+          <legend class="mb-3 text-center">Guarantor One Details</legend>
+          <div class="form-group">
+            <label for="guarantorOneName">Name</label>
+            <input type="text" name="guarantorOneName" class="form-control" id="guarantorOneName" value="<%= guard.guarantors[0].name %>">
+          </div>
+          <div class="form-group">
+            <label for="guarantorOneHomeAddress">Home Address</label>
+            <input type="text" name="guarantorOneHomeAddress" class="form-control" id="guarantorOneHomeAddress" value="<%= guard.guarantors[0].home_address %>">
+          </div>
+          <div class="form-group">
+            <label for="guarantorOneOfficeAddress">Office Address</label>
+            <input type="text" name="guarantorOneOfficeAddress" class="form-control" id="guarantorOneOfficeAddress" value="<%= guard.guarantors[0].office_address %>">
+          </div>
+          <div class="form-group">
+            <label for="guarantorOnePhone">Phone Number</label>
+            <input type="tel" name="guarantorOnePhone" class="form-control" id="guarantorOnePhone" value="<%= guard.guarantors[0].phone_contact %>">
+          </div>
+          <div class="form-group">
+            <label for="guarantorOneOccupation">Occupation</label>
+            <input type="text" name="guarantorOneOccupation" class="form-control" id="guarantorOneOccupation" value="<%= guard.guarantors[0].occupation %>">
+          </div>
+        </fieldset>
+      </div>
+     
+
+      <div class="col-md-6">
+        <fieldset>
+          <legend class="mb-3 text-center">Guarantor Two Details</legend>
+          <div class="form-group">
+            <label for="guarantorTwoName">Name</label>
+            <input type="text" name="guarantorTwoName" class="form-control" id="guarantorTwoName"  value="<%= guard.guarantors[1].name %>">
+          </div>
+          <div class="form-group">
+            <label for="guarantorTwoHomeAddress">Home Address</label>
+            <input type="text" name="guarantorTwoHomeAddress" class="form-control" id="guarantorTwoHomeAddress"  value="<%= guard.guarantors[1].home_address %>">
+          </div>
+          <div class="form-group">
+            <label for="guarantorTwoOfficeAddress">Office Address</label>
+            <input type="text" name="guarantorTwoOfficeAddress" class="form-control" id="guarantorTwoOfficeAddress"  value="<%= guard.guarantors[1].office_address %>">
+          </div>
+          <div class="form-group">
+            <label for="guarantorTwoPhone">Phone Number</label>
+            <input type="tel" name="guarantorTwoPhone" class="form-control" id="guarantorTwoPhone"  value="<%= guard.guarantors[1].phone_contact %>">
+          </div>
+          <div class="form-group">
+            <label for="guarantorTwoOccupation">Occupation</label>
+            <input type="text" name="guarantorTwoOccupation" class="form-control" id="guarantorTwoOccupation"  value="<%= guard.guarantors[1].occupation %>">
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="text-center my-5">
+      <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+
+  </form>
+  <a class="mb-5 d-inline-block" href="/guards/<%= guard._id %>">Back</a>
+</div>
+
+<%- include ('./partials/footer') %>

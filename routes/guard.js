@@ -1,20 +1,27 @@
-const express = require('express')
-const {register_guard,
-    get_all_guard_data,
-    get_single_guard_data,
-    delete_single_guard_data,
-    update_single_guard_data  } = require('../controllers/guard');
+const express = require('express');
 
-const router = express.Router()
+const {
+  getAllGuards,
+  getSingleGuard,
+  showRegistrationForm,
+  registerGuard,
+  showEditForm,
+  updateGuardData,
+  deleteGuardData,
+} = require('../controllers/guard');
 
-router.route('/register').post(register_guard)
-router.get('/guards', get_all_guard_data)
-router.route('/guards/:id')
-.get(get_single_guard_data)
-.delete(delete_single_guard_data)
-.put(update_single_guard_data)
+const { auth } = require('../middleware/auth');
 
+const router = express.Router();
 
+router.route('/new').get(auth, showRegistrationForm);
+router.route('/').get(auth, getAllGuards).post(auth, registerGuard);
+router
+  .route('/:id')
+  .get(auth, getSingleGuard)
+  .delete(auth, deleteGuardData)
+  .put(auth, updateGuardData);
 
+router.get('/:id/edit', auth, showEditForm);
 
-module.exports=router
+module.exports = router;

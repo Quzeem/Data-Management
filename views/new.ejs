@@ -1,0 +1,129 @@
+<%- include ('./partials/header') %>
+
+<div id="registration-form">
+  <h2 class="text-center mb-4">Register a New Guard</h2>
+  <form action="/guards" method="POST">
+    <fieldset>
+      <legend class="mb-3 text-center">Guard Details</legend>
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="guardName">Guard Name</label>
+          <input type="text" name="guardName" class="form-control" id="guardName" required>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="guardPhoneNumber">Phone Number</label>
+          <input type="tel" name="guardPhoneNumber" class="form-control" id="guardPhoneNumber" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="guardPermanentHomeAddress">Permanent Home Address</label>
+        <input type="text" name="guardPermanentHomeAddress" class="form-control" id="guardPermanentHomeAddress" placeholder="Enter permanent home address" required>
+      </div>
+      <div class="form-group">
+        <label for="guardPresentHomeAddress">Present Home Address</label>
+        <input type="text" name="guardPresentHomeAddress" class="form-control" id="guardPresentHomeAddress" placeholder="Enter present home address" required>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="dateOfBirth">Date of Birth</label>
+          <input type="date" name="dateOfBirth" class="form-control" id="dateOfBirth" required>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="stateOfOrigin">State of Origin</label>
+          <input type="text" name="stateOfOrigin" class="form-control" id="stateOfOrigin" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="nextOfKin">Next of Kin</label>
+          <input type="text" name="nextOfKin" class="form-control" id="nextOfKin" required>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="nextOfKinPhone">Phone Number of Next of Kin</label>
+          <input type="tel" name="nextOfKinPhone" class="form-control" id="nextOfKinPhone" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label for="post">Post</label>
+          <input type="text" name="post" class="form-control" id="post">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="beat">Beat</label>
+          <input type="text" name="beat" class="form-control" id="beat">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="dateOfDeployment">Date of Deployment</label>
+          <input type="date" name="dateOfDeployment" class="form-control" id="dateOfDeployment" required>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <fieldset>
+          <legend class="mb-3 text-center">Guarantor One Details</legend>
+          <div class="form-group">
+            <label for="guarantorOneName">Name</label>
+            <input type="text" name="guarantorOneName" class="form-control" id="guarantorOneName" required>
+          </div>
+          <div class="form-group">
+            <label for="guarantorOneHomeAddress">Home Address</label>
+            <input type="text" name="guarantorOneHomeAddress" class="form-control" id="guarantorOneHomeAddress" required>
+          </div>
+          <div class="form-group">
+            <label for="guarantorOneOfficeAddress">Office Address</label>
+            <input type="text" name="guarantorOneOfficeAddress" class="form-control" id="guarantorOneOfficeAddress" required>
+          </div>
+          <div class="form-group">
+            <label for="guarantorOnePhone">Phone Number</label>
+            <input type="tel" name="guarantorOnePhone" class="form-control" id="guarantorOnePhone" required>
+          </div>
+          <div class="form-group">
+            <label for="guarantorOneOccupation">Occupation</label>
+            <input type="text" name="guarantorOneOccupation" class="form-control" id="guarantorOneOccupation" required>
+          </div>
+        </fieldset>
+      </div>
+     
+
+      <div class="col-md-6">
+        <fieldset>
+          <legend class="mb-3 text-center">Guarantor Two Details</legend>
+          <div class="form-group">
+            <label for="guarantorTwoName">Name</label>
+            <input type="text" name="guarantorTwoName" class="form-control" id="guarantorTwoName" required>
+          </div>
+          <div class="form-group">
+            <label for="guarantorTwoHomeAddress">Home Address</label>
+            <input type="text" name="guarantorTwoHomeAddress" class="form-control" id="guarantorTwoHomeAddress" required>
+          </div>
+          <div class="form-group">
+            <label for="guarantorTwoOfficeAddress">Office Address</label>
+            <input type="text" name="guarantorTwoOfficeAddress" class="form-control" id="guarantorTwoOfficeAddress" required>
+          </div>
+          <div class="form-group">
+            <label for="guarantorTwoPhone">Phone Number</label>
+            <input type="tel" name="guarantorTwoPhone" class="form-control" id="guarantorTwoPhone" required>
+          </div>
+          <div class="form-group">
+            <label for="guarantorTwoOccupation">Occupation</label>
+            <input type="text" name="guarantorTwoOccupation" class="form-control" id="guarantorTwoOccupation" required>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="text-center my-5">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+  </form>
+  <a class="mb-5 d-inline-block" href="/guards">Back</a>
+</div>
+
+<%- include ('./partials/footer') %>

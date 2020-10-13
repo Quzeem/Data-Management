@@ -45,7 +45,7 @@ const GaurdSchema = new Schema(
       trim: true,
     },
     date_of_deployment: {
-      type: Date,
+      type: String,
     },
     post: {
       type: String,
@@ -53,6 +53,11 @@ const GaurdSchema = new Schema(
     },
     beat: {
       type: String,
+    },
+    guard_photo: {
+      type: String,
+      default:
+        'https://res.cloudinary.com/zeemag/image/upload/v1601946625/konnet/no-avatar_a5icj4.png',
     },
     guarantors: [
       {
@@ -85,7 +90,7 @@ const GaurdSchema = new Schema(
           default:
             'https://res.cloudinary.com/zeemag/image/upload/v1601946625/konnet/no-avatar_a5icj4.png',
         },
-        _id : false
+        _id: false,
       },
     ],
   },

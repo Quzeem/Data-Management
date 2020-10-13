@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const Schema = mongoose.Schema;
 
@@ -13,24 +12,20 @@ const AdminSchema = new Schema({
   },
 });
 
-
 // Encrypt password using bcrypt
-AdminSchema.pre("save", async function (next) {
-  
-  if (!this.isModified("password")) {
+AdminSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
     next();
   }
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
 });
 
-
 // Sign JWT and return
-
 AdminSchema.methods.signToken = function () {
   return jwt.sign(
     {
-      id: this._id,
+      id: this._id, //modified to auth middleware
     },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRE }
@@ -39,10 +34,8 @@ AdminSchema.methods.signToken = function () {
 
 // Match password for loginAdmin
 AdminSchema.methods.matchPassword = async function (enteredPassword) {
-  
-  return await bcrypt.compare(enteredPassword, this.password);
+  const match = await bcrypt.compare(enteredPassword, this.password);
+  return match;
 };
 
-
 module.exports = mongoose.model('Admin', AdminSchema);
-

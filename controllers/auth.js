@@ -1,57 +1,60 @@
-const Admin = require("../models/Admin");
-const sendTokenRespones = require("../utils/sendToken");
+const Admin = require('../models/Admin');
+const sendTokenResponse = require('../utils/sendToken');
 
 // @desc    Admin Login
-// @route   POST /login
+// @route   GET /auth/login
 // @access  Public
+exports.showLoginForm = async (req, res) => {
+  res.render('login');
+};
 
-exports.login = async (req, res, next) => {
+// @desc    Admin Login
+// @route   POST /auth/login
+// @access  Public
+exports.login = async (req, res) => {
   const { username, password } = req.body;
-
   // Validate Email and Password
   if (!username || !password) {
-    return next(
-      new ErrorResponse("Please provide a username and a password", 400)
-      );
-    }
-    try{
-    const user = await Admin.findOne({ username })
-    if(!user){
-      return new ErrorResponse('Invalid credentials supplied.')
+    req.flash('error', 'Please provide a username and a password');
+    return res.redirect('/auth/login');
+  }
+  try {
+    const user = await Admin.findOne({ username });
+
+    if (!user) {
+      req.flash('error', 'Invalid credentials');
+      return res.redirect('/auth/login');
     }
 
     const isMatch = await user.matchPassword(password);
-    if (!isMatch){
-      return new Error('Invalid credentials supplied.')
+
+    if (!isMatch) {
+      req.flash('error', 'Invalid credentials');
+      return res.redirect('/auth/login');
     }
-    sendTokenRespones(user, 200, res)
-  }catch(error){
-    return new Error('Invalid credentials supplied.')
+
+    sendTokenResponse(user, req, res);
+  } catch (error) {
+    req.flash('error', error.message);
+    return res.redirect('/auth/login');
   }
-    
-  }; 
-
-
+};
 
 // @desc    Logout
-// @route   GET /logout
+// @route   GET /auth/logout
 // @access  Private
 
 exports.logout = async (req, res) => {
   try {
-    
-  res.cookie("token", "none", {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
-  });
+    res.cookie('token', '', {
+      expires: new Date(Date.now() + 5 * 1000),
+      httpOnly: true,
+    });
 
-  res.status(200).json({
-    status: "success",
-    message: "You are logged out. We hope to see you soon.",
-  });
-  }catch(error){
-    return new Error({
-      error: error.message
-    })
+    req.flash('success', 'Successfully logged out');
+    return res.redirect('/auth/login');
+  } catch (error) {
+    req.flash('error', 'Something went wrong');
+    return res.redirect('/auth/login');
   }
 };
