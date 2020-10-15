@@ -20,9 +20,10 @@
         <p><b>Post: </b><%= guard.post %></p>
       </div>
 
+      <!-- /guards/<%= guard._id %>"  -->
       <div class="upload-photo">
         <img src="<%= guard.guard_photo %>" alt="Guard Avatar" class="img-fluid rounded">
-        <form action="/guard/avatar" method="POST" enctype="multipart/form-data" class="mt-2">
+        <form action="/avatar/<%= guard._id %>/avatar" method="POST" enctype="multipart/form-data" class="mt-2">
           <div class="form-group">
             <label for="guardAvatar">Choose an image file to upload</label>
             <input type="file" name="guardAvatar" accept="image/*" class="form-control-file" id="guardAvatar">
@@ -46,7 +47,7 @@
 
       <div class="upload-photo">
         <img src="<%= guard.guarantors[0].photo %>" alt="Guarantor One Avatar" class="img-fluid rounded">
-        <form action="/guarantorOne/avatar" method="POST" enctype="multipart/form-data" class="mt-2">
+        <form action="/avatar/<%= guard._id %>/avatarone" method="POST" enctype="multipart/form-data" class="mt-2">
           <div class="form-group">
             <label for="guarantorOneAvatar">Choose an image file to upload</label>
             <input type="file" name="guarantorOneAvatar" accept="image/*" class="form-control-file" id="guarantorOneAvatar">
@@ -70,7 +71,7 @@
 
       <div class="upload-photo">
         <img src="<%= guard.guarantors[1].photo %>" alt="Guarantor Two Avatar" class="img-fluid rounded">
-        <form action="/guarantorTwo/avatar" method="POST" enctype="multipart/form-data" class="mt-2">
+        <form action="/avatar/<%= guard._id %>/avatartwo" method="POST" enctype="multipart/form-data" class="mt-2">
           <div class="form-group">
             <label for="guarantorTwoAvatar">Choose an image file to upload</label>
             <input type="file" name="guarantorTwoAvatar" accept="image/*" class="form-control-file" id="guarantorTwoAvatar">

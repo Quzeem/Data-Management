@@ -8,9 +8,12 @@ exports.showLoginForm = async (req, res) => {
   res.render('login');
 };
 
-// @desc    Admin Login
-// @route   POST /auth/login
-// @access  Public
+/**
+@desc    Admin Login
+@route   POST /auth/login
+@access  Public
+*/
+
 exports.login = async (req, res) => {
   const { username, password } = req.body;
   // Validate Email and Password

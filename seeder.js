@@ -7,7 +7,7 @@ dotenv.config({
 
 
 const Admin = require("./models/Admin");
-const Guard = require("./models/Guard");
+
 
 // This is seeding to the local db 
 mongoose.connect(process.env.MONGO, {
@@ -21,14 +21,10 @@ const admin = JSON.parse(
   fs.readFileSync(`${__dirname}/data/adminData.json`, "utf8")
 );
 
-const guardData = JSON.parse(
-  fs.readFileSync(`${__dirname}/data/guardData.json`, "utf8")
-);
 
 const importData = async () => {
   try {
     await Admin.create(admin);
-    await Guard.create(guardData)
     
     console.log("Data Imported!");
     process.exit();
@@ -42,7 +38,7 @@ const importData = async () => {
 const deleteData = async () => {
   try {
     await Admin.deleteMany();
-    await Guard.deleteMany();
+    
    
     console.log("Data deleted successfully!");
     process.exit();

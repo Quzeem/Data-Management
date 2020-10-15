@@ -4,12 +4,17 @@ const Guard = require('../models/Guard');
 //  @routes  GET /guards
 //  @access  Private
 exports.getAllGuards = async (req, res) => {
+
   try {
-    const guards = await Guard.find();
-    return res.render('index', { guards });
+    guards = await Guard.find();
+ 
+    return res.render('index', {
+      guards
+    });
   } catch (error) {
     req.flash('error', 'Something went wrong');
   }
+
 };
 
 //  @desc    Get guard's data
@@ -25,7 +30,9 @@ exports.getSingleGuard = async (req, res) => {
       return res.redirect('/guards');
     }
 
-    return res.render('show', { guard });
+    return res.render('show', {
+      guard
+    });
   } catch (error) {
     req.flash('error', 'Something went wrong');
   }
@@ -57,8 +64,7 @@ exports.registerGuard = async (req, res, next) => {
       post: req.body.post,
       beat: req.body.beat,
     });
-    guard.guarantors = [
-      {
+    guard.guarantors = [{
         name: req.body.guarantorOneName,
         home_address: req.body.guarantorOneHomeAddress,
         office_address: req.body.guarantorOneOfficeAddress,
@@ -98,7 +104,9 @@ exports.showEditForm = async (req, res) => {
       return res.redirect(`/guards/${guard._id}`);
     }
 
-    return res.render('edit', { guard });
+    return res.render('edit', {
+      guard
+    });
   } catch (error) {
     req.flash('error', 'Something went wrong');
   }
@@ -122,8 +130,7 @@ exports.updateGuardData = async (req, res) => {
     post: req.body.post,
     beat: req.body.beat,
 
-    guarantors: [
-      {
+    guarantors: [{
         name: req.body.guarantorOneName,
         home_address: req.body.guarantorOneHomeAddress,
         office_address: req.body.guarantorOneOfficeAddress,

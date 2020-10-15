@@ -10,6 +10,7 @@ dotenv.config({ path: './config/.env' });
 
 const auth = require('./routes/auth');
 const guard = require('./routes/guard');
+const avatar = require('./routes/avatar');
 
 // connect to Database
 createDBConnection();
@@ -47,6 +48,7 @@ app.get('/', (req, res) => {
 
 app.use('/auth', auth);
 app.use('/guards', guard);
+app.use('/avatar', avatar);
 
 const PORT = process.env.PORT || 5000;
 
