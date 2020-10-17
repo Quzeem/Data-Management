@@ -24,13 +24,12 @@ const fileFilter = (req, files, cb) => {
         cb(null, false)
     }
 }
-const limits = {
-    fileSize: parseInt(process.env.FILE_SIZE)
-}
+// const limits = {
+//     fileSize: parseInt(process.env.FILE_SIZE)
+// }
 
 const multerUpload = multer({
     storage,
-    limits,
     fileFilter
 })
 

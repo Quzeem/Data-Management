@@ -1,18 +1,24 @@
 const Guard = require('../models/Guard');
 
 //  @desc   Get all guards
-//  @routes  GET /guards
+//  @routes  GET /guards?page=1
 //  @access  Private
 exports.getAllGuards = async (req, res) => {
+  const limit = 10;
+  const page = req.query.page || 1;
+  const indexPage = (page - 1) * limit;
 
   try {
-    guards = await Guard.find();
+    const guards = await Guard.find().skip(indexPage).limit(limit).sort({ 'guard_name': 1});
+    const totalGuards = await Guard.countDocuments();
+    const pages = Math.ceil(totalGuards / limit);
  
     return res.render('index', {
-      guards
+      guards, currentPage: page, pages
     });
   } catch (error) {
     req.flash('error', 'Something went wrong');
+    return res.redirect('/auth/login');
   }
 
 };
@@ -34,7 +40,8 @@ exports.getSingleGuard = async (req, res) => {
       guard
     });
   } catch (error) {
-    req.flash('error', 'Something went wrong');
+    req.flash('error', 'Guard not found');
+    return res.redirect('/guards');
   }
 };
 
@@ -83,11 +90,10 @@ exports.registerGuard = async (req, res, next) => {
     await guard.save();
 
     req.flash('success', 'Data successfully Added');
-    res.redirect('/guards');
+    return res.redirect('/guards');
   } catch (error) {
-    console.error(error);
     req.flash('error', 'Something went wrong');
-    res.redirect('/guards');
+    return res.redirect('/guards');
   }
 };
 
@@ -108,7 +114,8 @@ exports.showEditForm = async (req, res) => {
       guard
     });
   } catch (error) {
-    req.flash('error', 'Something went wrong');
+    req.flash('error', 'Guard not found');
+    return res.redirect('/guards');
   }
 };
 
@@ -159,11 +166,10 @@ exports.updateGuardData = async (req, res) => {
     }
 
     req.flash('success', 'Data successfully updated');
-    res.redirect(`/guards/${guard._id}`);
+    return res.redirect(`/guards/${guard._id}`);
   } catch (error) {
-    console.log(error);
-    req.flash('error', 'Something went wrong');
-    res.redirect(`/guards/${guard._id}`);
+    req.flash('error', 'Guard not found');
+    return res.redirect(`/guards/${guard._id}`);
   }
 };
 
@@ -181,9 +187,9 @@ exports.deleteGuardData = async (req, res) => {
     }
 
     req.flash('success', 'Data successfully deleted');
-    res.redirect('/guards');
+    return res.redirect('/guards');
   } catch (error) {
     req.flash('error', 'Something went wrong');
-    res.redirect('/guards');
+    return res.redirect('/guards');
   }
 };
