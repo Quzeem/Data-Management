@@ -2,6 +2,7 @@
 
 <div id="registration-form">
   <h2 class="text-center mb-4">Register a New Guard</h2>
+  <h3>Option A: Registration Form</h3>
   <form action="/guards" method="POST" autocomplete="off">
     <fieldset>
       <legend class="mb-3 text-center">Guard Details</legend>
@@ -118,11 +119,21 @@
       </fieldset>
     </div>
 
-    <div class="text-center my-5">
+    <div class="text-center mb-5">
       <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 
   </form>
+
+  <h3>Option B: Upload a CSV File</h3>
+  <form action="/guards/csv/upload" method="POST" enctype="multipart/form-data" class="mt-2 mb-5">
+    <div class="form-group">
+      <label for="csv">Choose a CSV file to upload</label>
+      <input type="file" name="csv" accept=".csv" class="form-control-file" id="csv">
+    </div>
+    <button type="submit" class="btn btn-primary btn-sm">Upload</button>
+  </form>
+
   <a class="mb-5 d-inline-block" href="/guards">Back</a>
 </div>
 

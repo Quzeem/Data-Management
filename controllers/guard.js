@@ -1,4 +1,6 @@
+const csv = require('fast-csv');
 const Guard = require('../models/Guard');
+const escapeStringRegexp = require('escape-string-regexp');
 
 //  @desc   Get all guards
 //  @routes  GET /guards?page=1
@@ -7,20 +9,48 @@ exports.getAllGuards = async (req, res) => {
   const limit = 10;
   const page = req.query.page || 1;
   const indexPage = (page - 1) * limit;
+  const totalGuards = await Guard.countDocuments();
+  const pages = Math.ceil(totalGuards / limit);
+
+  let guards;
 
   try {
-    const guards = await Guard.find().skip(indexPage).limit(limit).sort({ 'guard_name': 1});
-    const totalGuards = await Guard.countDocuments();
-    const pages = Math.ceil(totalGuards / limit);
- 
+    // Search
+    if (req.query.search) {
+      const { search } = req.query;
+
+      // Escape RegExp special characters.
+      const $regex = escapeStringRegexp(search);
+
+      guards = await Guard.find({
+        guard_name: { $regex, $options: 'i' },
+      })
+        .skip(indexPage)
+        .limit(limit)
+        .sort({ guard_name: 1 });
+
+      return res.render('index', {
+        guards,
+        currentPage: page,
+        pages,
+      });
+    }
+
+    // else find all
+    guards = await Guard.find()
+      .skip(indexPage)
+      .limit(limit)
+      .sort({ guard_name: 1 });
+
     return res.render('index', {
-      guards, currentPage: page, pages
+      guards,
+      currentPage: page,
+      pages,
     });
   } catch (error) {
     req.flash('error', 'Something went wrong');
     return res.redirect('/auth/login');
   }
-
 };
 
 //  @desc    Get guard's data
@@ -37,7 +67,7 @@ exports.getSingleGuard = async (req, res) => {
     }
 
     return res.render('show', {
-      guard
+      guard,
     });
   } catch (error) {
     req.flash('error', 'Guard not found');
@@ -71,7 +101,8 @@ exports.registerGuard = async (req, res, next) => {
       post: req.body.post,
       beat: req.body.beat,
     });
-    guard.guarantors = [{
+    guard.guarantors = [
+      {
         name: req.body.guarantorOneName,
         home_address: req.body.guarantorOneHomeAddress,
         office_address: req.body.guarantorOneOfficeAddress,
@@ -97,6 +128,136 @@ exports.registerGuard = async (req, res, next) => {
   }
 };
 
+//  @desc   Add new guards via csv
+//  @routes  POST /guards/csv/upload
+//  @access  Private
+exports.registerGuardsWithCSV = async (req, res) => {
+  if (!req.file) {
+    req.flash('error', 'Please upload a file');
+    return res.redirect('/guards/new');
+  }
+
+  try {
+    const guardsFile = req.file;
+
+    const guards = [];
+
+    const options = {
+      headers: [
+        'name',
+        'permanentHomeAddress',
+        'presentHomeAddress',
+        'phoneNumber',
+        'dateOfBirth',
+        'stateOfOrigin',
+        'nextOfKin',
+        'nextOfKinPhone',
+        'dateOfDeployment',
+        'guarantorOneName',
+        'guarantorOneHomeAddress',
+        'guarantorOneOfficeAddress',
+        'guarantorOnePhone',
+        'guarantorOneOccupation',
+        'guarantorTwoName',
+        'guarantorTwoHomeAddress',
+        'guarantorTwoOfficeAddress',
+        'guarantorTwoPhone',
+        'guarantorTwoOccupation',
+      ],
+      renameHeaders: true,
+      discardUnmappedColumns: true,
+      quote: null,
+      ignoreEmpty: true,
+      trim: true,
+    };
+
+    const CSV_STRING = guardsFile.buffer.toString();
+
+    const stream = csv
+      .parse(options)
+      .on('error', function (error) {
+        throw error;
+      })
+      .on('data', (guardStream) => {
+        const guardObject = guardStream;
+        guards.push(guardObject);
+      })
+      .on('end', async () => {
+        const totalProcessCounter = guards.length;
+        let currentProcessCount = 0;
+
+        // forEach starts here
+        for (const guardData of guards) {
+          try {
+            const guard = new Guard({
+              guard_name: guardData.name,
+              permanent_home_address: guardData.permanentHomeAddress,
+              present_home_address: guardData.presentHomeAddress,
+              phone_number: guardData.phoneNumber,
+              date_of_birth: guardData.dateOfBirth,
+              state_of_origin: guardData.stateOfOrigin,
+              next_of_kin: guardData.nextOfKin,
+              next_of_kin_phone_number: guardData.nextOfKinPhone,
+              date_of_deployment: guardData.dateOfDeployment,
+              post: guardData.post,
+              beat: guardData.beat,
+            });
+            guard.guarantors = [
+              {
+                name: guardData.guarantorOneName,
+                home_address: guardData.guarantorOneHomeAddress,
+                office_address: guardData.guarantorOneOfficeAddress,
+                phone_contact: guardData.guarantorOnePhone,
+                occupation: guardData.guarantorOneOccupation,
+              },
+              {
+                name: guardData.guarantorTwoName,
+                home_address: guardData.guarantorTwoHomeAddress,
+                office_address: guardData.guarantorTwoOfficeAddress,
+                phone_contact: guardData.guarantorTwoPhone,
+                occupation: guardData.guarantorTwoOccupation,
+              },
+            ];
+
+            await guard.save();
+
+            ++currentProcessCount;
+
+            if (totalProcessCounter === currentProcessCount) {
+              req.flash('success', 'File uploaded successfully.');
+              return res.redirect('/guards');
+            }
+          } catch (err) {
+            // Mongoose validation error
+            if (err.name === 'ValidationError') {
+              const message = Object.values(err.errors).map(
+                (value) => value.message
+              );
+              req.flash('error', message);
+              return res.redirect('/guards/new');
+            }
+
+            req.flash('error', 'Something went wrong.');
+            return res.redirect('/guards/new');
+          }
+        }
+        // forEach ends here
+      });
+    stream.write(CSV_STRING);
+    stream.end();
+  } catch (err) {
+    if (err.message === 'File too large') {
+      req.flash('error', 'Please upload a file less than 1MB.');
+      return res.redirect('/guards/new');
+    }
+    // else
+    req.flash('error', 'Something went wrong.');
+    return res.redirect('/guards/new');
+  }
+
+  return null;
+};
+
 //  @desc    Show edit form
 //  @routes  GET /guards/:id/edit
 //  @access  Private
@@ -111,7 +272,7 @@ exports.showEditForm = async (req, res) => {
     }
 
     return res.render('edit', {
-      guard
+      guard,
     });
   } catch (error) {
     req.flash('error', 'Guard not found');
@@ -137,7 +298,8 @@ exports.updateGuardData = async (req, res) => {
     post: req.body.post,
     beat: req.body.beat,
 
-    guarantors: [{
+    guarantors: [
+      {
         name: req.body.guarantorOneName,
         home_address: req.body.guarantorOneHomeAddress,
         office_address: req.body.guarantorOneOfficeAddress,

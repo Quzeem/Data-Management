@@ -1,12 +1,12 @@
-const fs = require("fs");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+const fs = require('fs');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 dotenv.config({
-  path: "./config/.env",
+  path: './config/.env',
 });
 
-const Admin = require("./models/Admin");
-const Guard = require("./models/Guard");
+const Admin = require('./models/Admin');
+const Guard = require('./models/Guard');
 
 mongoose.connect(process.env.DB_URI, {
   useNewUrlParser: true,
@@ -16,18 +16,17 @@ mongoose.connect(process.env.DB_URI, {
 });
 
 const admin = JSON.parse(
-  fs.readFileSync(`${__dirname}/data/adminData.json`, "utf8")
+  fs.readFileSync(`${__dirname}/data/adminData.json`, 'utf8')
 );
 const guard = JSON.parse(
-  fs.readFileSync(`${__dirname}/data/guardData.json`, "utf8")
+  fs.readFileSync(`${__dirname}/data/guardData.json`, 'utf8')
 );
 
 const importData = async () => {
   try {
-    // await Admin.create(admin);
+    await Admin.create(admin);
     await Guard.create(guard);
-
-    console.log("Data Imported!");
+    console.log('Data Imported!');
     process.exit();
   } catch (err) {
     console.error(err);
@@ -38,18 +37,17 @@ const importData = async () => {
 
 const deleteData = async () => {
   try {
-    // await Admin.deleteMany();
+    await Admin.deleteMany();
     await Guard.deleteMany();
-
-    console.log("Data deleted successfully!");
+    console.log('Data deleted successfully!');
     process.exit();
   } catch (err) {
     console.error(err);
   }
 };
 // Identify if delete or Import
-if (process.argv[2] === "i") {
+if (process.argv[2] === 'i') {
   importData();
-} else if (process.argv[2] === "d") {
+} else if (process.argv[2] === 'd') {
   deleteData();
 }
